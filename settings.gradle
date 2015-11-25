@@ -1,1 +1,1 @@
-include ':app', ':tqim'
+include ':app'

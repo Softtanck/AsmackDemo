@@ -2,9 +2,15 @@ package com.softtanck.asmackdemo;
 
 import android.util.Log;
 
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.SASLAuthentication;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 /**
@@ -35,7 +41,27 @@ public class XmppProxyService {
             connection.connect();
             connection.login("tanck", "422013");
 //            connection.disconnect();
-            Log.d("Tanck", "连接成功");
+            Log.d("Tanck", "Connection Success");
+
+            ChatManager manager = ChatManager.getInstanceFor(connection);
+            manager.addChatListener(new ChatManagerListener() {
+                @Override
+                public void chatCreated(Chat chat, boolean b) {
+                    chat.addMessageListener(new MessageListener() {
+                        @Override
+                        public void processMessage(Chat chat, Message message) {
+                            Log.d("Tanck", "Revice Msg."+message.getBody()+"form:"+message.getFrom());
+                            Message msg = new Message("q");
+                            msg.setBody("test");
+                            try {
+                                chat.sendMessage(msg);
+                            } catch (SmackException.NotConnectedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            });
             return true;
         } catch (Exception e) {
             e.printStackTrace();
