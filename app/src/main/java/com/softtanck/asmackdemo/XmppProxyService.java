@@ -50,7 +50,7 @@ public class XmppProxyService {
                     chat.addMessageListener(new MessageListener() {
                         @Override
                         public void processMessage(Chat chat, Message message) {
-                            Log.d("Tanck", "Revice Msg."+message.getBody()+"form:"+message.getFrom());
+                            Log.d("Tanck", "Revice Msg:"+message.getBody()+"form:"+message.getFrom());
                             Message msg = new Message("q");
                             msg.setBody("test");
                             try {
